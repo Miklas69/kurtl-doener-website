@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurt'l Döner – Seit 1997 | Premium Kebab in Regensburg</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'kurtl': {
+          green: '#1a472a',
+          'green-light': '#2d6a2e',
+          gold: '#d4af37',
+          'gold-light': '#f3e5ab',
+          cream: '#fdfbf7',
+          charcoal: '#0f0f0f',
+          'charcoal-light': '#1c1c1c'
+        }
+      },
+      fontFamily: {
+        'display': ['Playfair Display', 'serif'],
+        'body': ['Inter', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { scroll-behavior: smooth; }
+  body { background-color: #0f0f0f; color: #fdfbf7; overflow-x: hidden; }
+
+  /* Premium Glassmorphism Navigation */
+  .nav-scrolled {
+    background: rgba(15, 15, 15, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-up { animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+
+  /* Infinite Slider für Rezensionen */
+  @keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-250px * 5 - 2rem * 5)); }
+  }
+  .slider-track {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    animation: slide 30s linear infinite;
+  }
+  .slider-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Image Hover Effects */
+  .img-zoom-container { overflow: hidden; }
+  .img-zoom-container img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .group:hover .img-zoom-container img {
+    transform: scale(1.05);
+  }
+
+  /* Divider */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent);
+  }
+
+  /* Menü Tabs */
+  .menu-tab { cursor: pointer; transition: all 0.3s; }
+  .menu-tab.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
+  .menu-category { display: none; }
+  .menu-category.active { display: grid; }
+
+  /* Impressum Accordion */
+  .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+  .accordion-content.open { max-height: 2000px; }
+  .accordion-arrow { transition: transform 0.3s; }
+  .accordion-arrow.open { transform: rotate(180deg); }
+
+  /* Mobile Menu */
+  .mobile-menu { display: none; }
+  .mobile-menu.open { display: flex; }
+</style>
+</head>
+<body class="font-body antialiased selection:bg-kurtl-gold selection:text-kurtl-charcoal">
+
+<!-- NAVIGATION -->
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6 px-6 lg:px-12">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="#hero" class="flex items-center gap-3 z-50">
+      <div class="text-left leading-none">
+        <span class="font-display text-2xl font-bold text-kurtl-cream tracking-wide">Kurt'l <span class="text-kurtl-gold italic">Döner</span></span>
+        <span class="block text-[9px] text-kurtl-gold tracking-[0.4em] uppercase mt-1">Regensburg · Est. 1997</span>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide">Philosophie</a>
+      <a href="#team" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide">Team</a>
+      <a href="#menu" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide">Menü</a>
+      <a href="#gallery" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide">Galerie</a>
+      <a href="#contact" class="px-7 py-3 bg-transparent border border-kurtl-gold text-kurtl-gold hover:bg-kurtl-gold hover:text-kurtl-charcoal rounded-none transition-all duration-300 text-sm font-semibold tracking-wider uppercase">Besuchen</a>
+    </div>
+    <!-- Mobile Hamburger -->
+    <button id="mobile-toggle" class="md:hidden text-kurtl-cream focus:outline-none z-50">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobile-menu" class="mobile-menu md:hidden flex-col gap-4 pt-6 pb-4 px-2 border-t border-kurtl-gold/10 mt-4 bg-kurtl-charcoal/95 backdrop-blur-lg">
+    <a href="#about" onclick="closeMobileMenu()" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide py-2">Philosophie</a>
+    <a href="#team" onclick="closeMobileMenu()" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide py-2">Team</a>
+    <a href="#menu" onclick="closeMobileMenu()" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide py-2">Menü</a>
+    <a href="#gallery" onclick="closeMobileMenu()" class="text-sm font-medium text-kurtl-cream/80 hover:text-kurtl-gold transition-colors tracking-wide py-2">Galerie</a>
+    <a href="#contact" onclick="closeMobileMenu()" class="text-sm font-semibold text-kurtl-gold tracking-wider uppercase py-2">Besuchen →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 w-full h-full">
+    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1920&auto=format&fit=crop" alt="Kurt'l Döner Ambiente" class="w-full h-full object-cover object-center filter brightness-50">
+    <div class="absolute inset-0 bg-gradient-to-t from-kurtl-charcoal via-transparent to-transparent"></div>
+  </div>
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-20">
+    <span class="block text-kurtl-gold text-sm tracking-[0.3em] uppercase mb-6 animate-fade-up font-medium">Handgemachte Qualität</span>
+    <h1 class="font-display text-6xl md:text-8xl font-bold text-kurtl-cream leading-tight mb-8 animate-fade-up delay-100">
+      Der Geschmack <br>von <span class="text-kurtl-gold italic font-light">Tradition.</span>
+    </h1>
+    <p class="text-lg md:text-xl text-kurtl-cream/80 font-light max-w-2xl mx-auto mb-12 animate-fade-up delay-200">
+      Frisches, hausgemachtes Brot. Sorgfältig geschichtetes Fleisch. Seit 1997 die erste Adresse für authentischen Kebab in Regensburg.
+    </p>
+    <div class="animate-fade-up delay-300">
+      <a href="#menu" class="inline-block px-10 py-4 bg-kurtl-gold text-kurtl-charcoal text-sm font-bold tracking-widest uppercase hover:bg-kurtl-cream transition-colors duration-300">
+        Speisekarte entdecken
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ÜBER UNS / PHILOSOPHIE -->
+<section id="about" class="py-32 px-6 lg:px-12 bg-kurtl-charcoal">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+    <div class="order-2 lg:order-1 relative img-zoom-container group">
+      <img src="https://images.unsplash.com/photo-1633366885871-705336ff3bc0?q=80&w=1000&auto=format&fit=crop" alt="Döner Zubereitung" class="w-full h-[600px] object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+      <div class="absolute -bottom-8 -right-8 bg-kurtl-green p-8 hidden md:block border border-kurtl-gold/20">
+        <p class="font-display text-5xl text-kurtl-gold mb-2">27+</p>
+        <p class="text-kurtl-cream text-sm tracking-widest uppercase">Jahre<br>Erfahrung</p>
+      </div>
+    </div>
+    <div class="order-1 lg:order-2">
+      <span class="text-kurtl-gold text-xs tracking-[0.2em] uppercase font-semibold">Unsere Geschichte</span>
+      <h2 class="font-display text-4xl md:text-5xl lg:text-6xl text-kurtl-cream mt-4 mb-8 leading-tight">Kein Hackfleisch.<br><span class="text-kurtl-gold italic">Nur Qualität.</span></h2>
+      <p class="text-kurtl-cream/70 text-lg font-light leading-relaxed mb-6">
+        Was als kleiner Familienbetrieb begann, ist heute eine Institution in Regensburg. Wir glauben daran, dass Fast Food nicht gleichbedeutend mit schlechter Qualität sein muss.
+      </p>
+      <p class="text-kurtl-cream/70 text-lg font-light leading-relaxed mb-12">
+        Unser Geheimnis liegt in den Details: Täglich frisch gebackenes Brot, sorgfältig geschichtetes Hähnchenfleisch vom Drehspieß und unsere legendären, hausgemachten Soßen nach altem Familienrezept.
+      </p>
+      <div class="grid grid-cols-2 gap-8 border-t border-kurtl-gold/10 pt-8">
+        <div>
+          <h4 class="text-kurtl-cream font-medium text-lg mb-2">Täglich Frisch</h4>
+          <p class="text-kurtl-cream/50 text-sm font-light">Vom Brot bis zum Salat – wir bereiten alles jeden Morgen frisch für dich zu.</p>
+        </div>
+        <div>
+          <h4 class="text-kurtl-cream font-medium text-lg mb-2">100% Geschichtet</h4>
+          <p class="text-kurtl-cream/50 text-sm font-light">Wir verwenden ausschließlich hochwertiges, geschichtetes Fleisch für unseren Spieß.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider max-w-7xl mx-auto"></div>
+
+<!-- TEAM -->
+<section id="team" class="py-32 px-6 lg:px-12 bg-kurtl-charcoal-light">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-20">
+      <span class="text-kurtl-gold text-xs tracking-[0.2em] uppercase font-semibold">Menschen hinter dem Geschmack</span>
+      <h2 class="font-display text-4xl md:text-6xl text-kurtl-cream mt-4">Unser <span class="text-kurtl-gold italic">Team</span></h2>
+      <p class="text-kurtl-cream/50 font-light mt-6 max-w-xl mx-auto">Mit Leidenschaft und jahrelanger Erfahrung sorgen wir täglich für dein perfektes Döner-Erlebnis.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10">
+      <!-- Team-Mitglied 1 – Platzhalter, bitte Namen/Fotos ersetzen -->
+      <div class="group text-center">
+        <div class="w-48 h-48 mx-auto mb-6 img-zoom-container border-2 border-kurtl-gold/20 group-hover:border-kurtl-gold/60 transition-colors duration-300">
+          <img src="https://images.unsplash.com/photo-1583394293214-0c9fab7e7d5a?q=80&w=400&auto=format&fit=crop" alt="[NAME EINTRAGEN]" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+        </div>
+        <h3 class="font-display text-2xl text-kurtl-cream">[Name]</h3>
+        <p class="text-kurtl-gold text-xs tracking-[0.25em] uppercase mt-2">Inhaber &amp; Gründer</p>
+        <p class="text-kurtl-cream/40 text-sm font-light mt-3 max-w-xs mx-auto">Seit 1997 mit Herzblut dabei – der Mann hinter dem Original-Rezept.</p>
+      </div>
+      <!-- Team-Mitglied 2 -->
+      <div class="group text-center">
+        <div class="w-48 h-48 mx-auto mb-6 img-zoom-container border-2 border-kurtl-gold/20 group-hover:border-kurtl-gold/60 transition-colors duration-300">
+          <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=400&auto=format&fit=crop" alt="[NAME EINTRAGEN]" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+        </div>
+        <h3 class="font-display text-2xl text-kurtl-cream">[Name]</h3>
+        <p class="text-kurtl-gold text-xs tracking-[0.25em] uppercase mt-2">Küchenchef</p>
+        <p class="text-kurtl-cream/40 text-sm font-light mt-3 max-w-xs mx-auto">Verantwortlich für die perfekte Würzung und Qualitätskontrolle täglich.</p>
+      </div>
+      <!-- Team-Mitglied 3 -->
+      <div class="group text-center">
+        <div class="w-48 h-48 mx-auto mb-6 img-zoom-container border-2 border-kurtl-gold/20 group-hover:border-kurtl-gold/60 transition-colors duration-300">
+          <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=400&auto=format&fit=crop" alt="[NAME EINTRAGEN]" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+        </div>
+        <h3 class="font-display text-2xl text-kurtl-cream">[Name]</h3>
+        <p class="text-kurtl-gold text-xs tracking-[0.25em] uppercase mt-2">Service &amp; Empfang</p>
+        <p class="text-kurtl-cream/40 text-sm font-light mt-3 max-w-xs mx-auto">Das freundliche Gesicht an der Kasse – immer mit einem Lächeln.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider max-w-7xl mx-auto"></div>
+
+<!-- SPEISEKARTE -->
+<section id="menu" class="py-32 px-6 lg:px-12 bg-kurtl-charcoal">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="text-kurtl-gold text-xs tracking-[0.2em] uppercase font-semibold">Frisch & Täglich</span>
+      <h2 class="font-display text-4xl md:text-6xl text-kurtl-cream mt-4">Unsere <span class="text-kurtl-gold italic">Speisekarte</span></h2>
+    </div>
+
+    <!-- Kategorie-Tabs -->
+    <div class="flex flex-wrap justify-center gap-0 mb-12 border-b border-kurtl-gold/10">
+      <button class="menu-tab active text-sm tracking-widest uppercase font-medium text-kurtl-cream/60 px-8 py-4" onclick="switchTab('doener', this)">Döner</button>
+      <button class="menu-tab text-sm tracking-widest uppercase font-medium text-kurtl-cream/60 px-8 py-4" onclick="switchTab('falafel', this)">Falafel</button>
+      <button class="menu-tab text-sm tracking-widest uppercase font-medium text-kurtl-cream/60 px-8 py-4" onclick="switchTab('extras', this)">Extras</button>
+    </div>
+
+    <!-- DÖNER Kategorie -->
+    <div id="cat-doener" class="menu-category active grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?q=80&w=800&auto=format&fit=crop" alt="Döner Kebab" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Döner Kebab</h3>
+          <span class="text-kurtl-gold font-medium text-lg">6,50 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Hausgemachtes Brot, frisch vom Spieß geschnittenes Fleisch, knackiger Salat und unsere Signature-Soße.</p>
+        <span class="text-[10px] tracking-widest uppercase border border-kurtl-gold text-kurtl-gold px-3 py-1">Beliebt</span>
+      </div>
+
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?q=80&w=800&auto=format&fit=crop" alt="Döner Dürüm" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Döner Dürüm</h3>
+          <span class="text-kurtl-gold font-medium text-lg">6,50 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Zartes Yufka-Fladenbrot, gerollt mit saftigem Döner-Fleisch, frischem Gemüse und hausgemachter Soße.</p>
+      </div>
+
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=800&auto=format&fit=crop" alt="Döner Teller" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Döner Teller</h3>
+          <span class="text-kurtl-gold font-medium text-lg">ab 9,00 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Großzügige Portion Fleisch mit frischem Salat, wahlweise mit Brot oder knusprigen Pommes.</p>
+      </div>
+    </div>
+
+    <!-- FALAFEL Kategorie -->
+    <div id="cat-falafel" class="menu-category grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1593504049359-74330189a345?q=80&w=800&auto=format&fit=crop" alt="Falafel Kebab" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Falafel Kebab</h3>
+          <span class="text-kurtl-gold font-medium text-lg">6,00 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Knusprige Falafel-Bällchen im hausgemachten Brot mit frischem Salat und Tahini-Soße.</p>
+        <span class="text-[10px] tracking-widest uppercase border border-kurtl-green text-kurtl-green-light px-3 py-1">Vegetarisch</span>
+      </div>
+
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=800&auto=format&fit=crop" alt="Falafel Dürüm" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Falafel Dürüm</h3>
+          <span class="text-kurtl-gold font-medium text-lg">6,00 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Außen knusprig, innen saftig: Falafel-Bällchen gerollt in zartem Yufka-Teig.</p>
+        <span class="text-[10px] tracking-widest uppercase border border-kurtl-green text-kurtl-green-light px-3 py-1">Vegetarisch</span>
+      </div>
+
+      <div class="group bg-kurtl-charcoal-light p-6 transition-all duration-300 hover:bg-[#252525] border border-transparent hover:border-kurtl-gold/20">
+        <div class="img-zoom-container h-56 mb-6">
+          <img src="https://images.unsplash.com/photo-1519984388953-d2406bc725e1?q=80&w=800&auto=format&fit=crop" alt="Falafel Teller" class="w-full h-full object-cover">
+        </div>
+        <div class="flex justify-between items-end mb-3">
+          <h3 class="font-display text-2xl text-kurtl-cream">Falafel Teller</h3>
+          <span class="text-kurtl-gold font-medium text-lg">ab 8,50 €</span>
+        </div>
+        <p class="text-kurtl-cream/60 font-light text-sm leading-relaxed mb-4">Falafel-Teller mit frischem Salat, Hummus, Beilage nach Wahl und Dip-Soßen.</p>
+        <span class="text-[10px] tracking-widest uppercase border border-kurtl-green text-kurtl-green-light px-3 py-1">Vegetarisch</span>
+      </div>
+    </div>
+
+    <!-- EXTRAS Kategorie -->
+    <div id="cat-extras" class="menu-category grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Extra Fleisch</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Zusätzliche Portion geschichtetes Fleisch</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 2,00 €</span>
+      </div>
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Käse</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Überbackener Käse nach Wahl</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 1,50 €</span>
+      </div>
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Dönerbrot</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Hausgemachtes Brot als Beilage</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 1,50 €</span>
+      </div>
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Dip / Soße</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Knoblauch, Scharf, Kräuter, Tahini</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 0,50 €</span>
+      </div>
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Pommes</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Knusprige Pommes frites</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 2,50 €</span>
+      </div>
+      <div class="flex justify-between items-center py-5 border-b border-kurtl-gold/10">
+        <div>
+          <h4 class="text-kurtl-cream font-medium">Salat</h4>
+          <p class="text-kurtl-cream/40 text-xs font-light mt-1">Gemischter frischer Salat</p>
+        </div>
+        <span class="text-kurtl-gold font-medium ml-8">+ 1,00 €</span>
+      </div>
+    </div>
+
+    <p class="text-center text-kurtl-cream/30 text-xs font-light mt-10 tracking-wide">Alle Preise inkl. MwSt. · Allergene auf Nachfrage</p>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="gallery" class="py-16 bg-kurtl-charcoal overflow-hidden">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <div class="img-zoom-container group aspect-square">
+      <img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?q=80&w=600&auto=format&fit=crop" alt="Galerie Bild 1" class="w-full h-full object-cover">
+    </div>
+    <div class="img-zoom-container group aspect-square">
+      <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&auto=format&fit=crop" alt="Galerie Bild 2" class="w-full h-full object-cover">
+    </div>
+    <div class="img-zoom-container group aspect-square">
+      <img src="https://images.unsplash.com/photo-1626200926715-4fa00b3e6e8c?q=80&w=600&auto=format&fit=crop" alt="Galerie Bild 3" class="w-full h-full object-cover">
+    </div>
+    <div class="img-zoom-container group aspect-square">
+      <img src="https://images.unsplash.com/photo-1528669826296-dfd29b00be7e?q=80&w=600&auto=format&fit=crop" alt="Galerie Bild 4" class="w-full h-full object-cover">
+    </div>
+  </div>
+</section>
+
+<!-- REZENSIONEN -->
+<section id="reviews" class="py-32 bg-kurtl-charcoal-light relative overflow-hidden border-y border-kurtl-gold/10">
+  <div class="text-center mb-16 relative z-10">
+    <h2 class="font-display text-4xl md:text-5xl text-kurtl-cream">Das sagen unsere <span class="text-kurtl-gold italic">Gäste</span></h2>
+    <div class="flex items-center justify-center gap-2 mt-4 text-kurtl-gold text-xl">
+      ★★★★★ <span class="text-sm text-kurtl-cream/60 font-body font-light ml-2">(4.3 Google Bewertung)</span>
+    </div>
+  </div>
+
+  <div class="relative max-w-full mx-auto overflow-hidden">
+    <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-kurtl-charcoal-light to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-kurtl-charcoal-light to-transparent z-10 pointer-events-none"></div>
+    <div class="slider-track" id="review-track"></div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="contact" class="py-32 px-6 lg:px-12 bg-kurtl-charcoal">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+    <div>
+      <span class="text-kurtl-gold text-xs tracking-[0.2em] uppercase font-semibold">Besuche uns</span>
+      <h2 class="font-display text-4xl md:text-5xl text-kurtl-cream mt-4 mb-12">Hier findest du<br><span class="text-kurtl-gold italic">Kurt'l Döner</span></h2>
+
+      <div class="space-y-8">
+        <div class="flex items-start gap-4">
+          <div class="text-kurtl-gold mt-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium">Adresse</h4>
+            <p class="text-kurtl-cream/60 font-light mt-1">Walhalla-Allee 14<br>93093 Donaustauf (im Kaufland)</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="text-kurtl-gold mt-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="w-full max-w-xs">
+            <h4 class="text-kurtl-cream font-medium">Öffnungszeiten</h4>
+            <div class="flex justify-between mt-2 text-kurtl-cream/60 font-light border-b border-white/10 pb-2">
+              <span>Montag – Samstag</span>
+              <span>10:00 – 20:00</span>
+            </div>
+            <div class="flex justify-between mt-2 text-kurtl-cream/40 font-light">
+              <span>Sonntag</span>
+              <span>Geschlossen</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="text-kurtl-gold mt-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium">Telefon</h4>
+            <p class="text-kurtl-cream/60 font-light mt-1">[TELEFONNUMMER EINTRAGEN]</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://www.google.com/maps/place/Kurt%E2%80%98l+D%C3%B6ner/@49.0277709,12.1222175,3a,75y/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgIDe-eD84AE!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwergY5hadIKEPmehmlhiC5A_xljgfgkErw9RjVZDP3ZNPbfmL6ZeD_uwO1gSC7Ech3tDBbUYzPU3pX3oh7mBvYRrJgyiLCr9nPwSSGACmwhXQEvO-7U_sdq0X0PhxwVxri6dCc5ALQ%3Dw119-h86-k-no!7i2699!8i1944!4m11!1m2!2m1!1za3VydGzCtHMgZMO2bmVy!3m7!1s0x479fc140541e5cc3:0x4a034b6e0a9e2986!8m2!3d49.0277709!4d12.1222175!10e5!15sCg9rdXJ0bMK0cyBkw7ZuZXJaECIOa3VydGwgcyBkw7ZuZXKSARJ0dXJraXNoX3Jlc3RhdXJhbnSaASNDaFpEU1VoTk1HOW5TMFZKUTBGblRVUkpieTFZTkZSM0VBReABAPoBBAgAEEc!16s%2Fg%2F11thhpp18f?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="inline-block mt-12 px-8 py-4 bg-kurtl-gold text-kurtl-charcoal text-sm font-bold tracking-widest uppercase hover:bg-kurtl-cream transition-colors duration-300">
+        Route auf Google Maps
+      </a>
+    </div>
+
+    <div class="h-[500px] bg-kurtl-charcoal-light border border-kurtl-gold/10 p-2">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2619.0!2d12.1222175!3d49.0277709!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479fc140541e5cc3%3A0x4a034b6e0a9e2986!2sKurt%E2%80%98l%20D%C3%B6ner!5e0!3m2!1sde!2sde!4v1710000000000" width="100%" height="100%" style="border:0; filter: grayscale(80%) contrast(1.2) opacity(0.8);" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- IMPRESSUM & DATENSCHUTZ -->
+<section id="impressum" class="py-20 px-6 lg:px-12 bg-kurtl-charcoal-light border-t border-kurtl-gold/10">
+  <div class="max-w-4xl mx-auto space-y-4">
+
+    <!-- Impressum Accordion -->
+    <div class="border border-kurtl-gold/10">
+      <button onclick="toggleAccordion('imp-content', 'imp-arrow')" class="w-full flex justify-between items-center px-8 py-5 text-left hover:bg-white/5 transition-colors">
+        <span class="text-kurtl-cream font-medium tracking-wide">Impressum</span>
+        <svg id="imp-arrow" class="accordion-arrow w-5 h-5 text-kurtl-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div id="imp-content" class="accordion-content">
+        <div class="px-8 pb-8 text-kurtl-cream/60 text-sm font-light leading-relaxed space-y-4">
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">Angaben gemäß § 5 TMG</h4>
+            <p>[VOLLSTÄNDIGER NAME DES INHABERS]<br>
+            Walhalla-Allee 14<br>
+            93093 Donaustauf</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">Kontakt</h4>
+            <p>Telefon: [TELEFONNUMMER]<br>
+            E-Mail: [E-MAIL-ADRESSE]</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">Umsatzsteuer-ID</h4>
+            <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:<br>
+            [STEUERNUMMER]</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">Haftung für Inhalte</h4>
+            <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Datenschutz Accordion -->
+    <div class="border border-kurtl-gold/10">
+      <button onclick="toggleAccordion('dsg-content', 'dsg-arrow')" class="w-full flex justify-between items-center px-8 py-5 text-left hover:bg-white/5 transition-colors">
+        <span class="text-kurtl-cream font-medium tracking-wide">Datenschutzerklärung</span>
+        <svg id="dsg-arrow" class="accordion-arrow w-5 h-5 text-kurtl-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div id="dsg-content" class="accordion-content">
+        <div class="px-8 pb-8 text-kurtl-cream/60 text-sm font-light leading-relaxed space-y-4">
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">1. Datenschutz auf einen Blick</h4>
+            <p>Diese Website erhebt keine personenbezogenen Daten und setzt keine Cookies ein. Es werden keine Tracking- oder Analyse-Tools verwendet.</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">2. Verantwortliche Stelle</h4>
+            <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
+            [VOLLSTÄNDIGER NAME]<br>
+            Walhalla-Allee 14, 93093 Donaustauf<br>
+            E-Mail: [E-MAIL-ADRESSE]</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">3. Google Maps</h4>
+            <p>Diese Website nutzt den Kartendienst Google Maps der Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. Beim Aufruf der Seite mit eingebetteter Karte werden Verbindungsdaten an Google-Server übertragen. Grundlage ist Art. 6 Abs. 1 lit. f DSGVO. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank" class="text-kurtl-gold hover:underline">policies.google.com/privacy</a>.</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">4. Google Fonts</h4>
+            <p>Diese Website lädt Schriftarten von Google Fonts (Google LLC). Dabei wird Ihre IP-Adresse an Google-Server übertragen. Grundlage ist Art. 6 Abs. 1 lit. f DSGVO. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank" class="text-kurtl-gold hover:underline">policies.google.com/privacy</a>.</p>
+          </div>
+          <div>
+            <h4 class="text-kurtl-cream font-medium mb-2">5. Ihre Rechte</h4>
+            <p>Sie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer personenbezogenen Daten sowie das Recht auf Datenübertragbarkeit. Wenden Sie sich dazu an die oben genannte Kontaktadresse.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-10 bg-[#0a0a0a] border-t border-kurtl-gold/10 text-center">
+  <p class="font-display text-lg text-kurtl-gold italic mb-2">Kurt'l Döner</p>
+  <p class="text-kurtl-cream/40 text-sm font-light mb-4">© 2026 Kurt'l Döner Regensburg. Alle Rechte vorbehalten.</p>
+  <div class="flex justify-center gap-8 text-xs text-kurtl-cream/30 font-light tracking-wide">
+    <a href="#impressum" onclick="toggleAccordion('imp-content','imp-arrow'); setTimeout(()=>document.getElementById('impressum').scrollIntoView({behavior:'smooth'}),100);" class="hover:text-kurtl-gold transition-colors cursor-pointer">Impressum</a>
+    <span>·</span>
+    <a href="#impressum" onclick="toggleAccordion('dsg-content','dsg-arrow'); setTimeout(()=>document.getElementById('impressum').scrollIntoView({behavior:'smooth'}),100);" class="hover:text-kurtl-gold transition-colors cursor-pointer">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+// Navbar Scroll Effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 50) {
+    nav.classList.add('nav-scrolled');
+  } else {
+    nav.classList.remove('nav-scrolled');
+  }
+});
+
+// Mobile Menu Toggle
+const mobileToggle = document.getElementById('mobile-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+mobileToggle.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+});
+function closeMobileMenu() {
+  mobileMenu.classList.remove('open');
+}
+
+// Menü Tabs
+function switchTab(category, btn) {
+  document.querySelectorAll('.menu-category').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('cat-' + category).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Accordion Toggle
+function toggleAccordion(contentId, arrowId) {
+  const content = document.getElementById(contentId);
+  const arrow = document.getElementById(arrowId);
+  content.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// Reviews Data (Echte Google Rezensionen)
+const reviews = [
+  { name: "W. B.", text: "Absolut top, sauber, sehr freundliche Bedienung und der Döner war auch mega!! Kenn den Laden seit ca. 20 Jahren." },
+  { name: "Betti C.", text: "Einfach der beste Döner, den Regensburg zu bieten hat. Das Brot ist immer knusprig, das Fleisch auch. Beste Soßen, reichlich belegt." },
+  { name: "Michel S.", text: "Bei Kurt´l ist alles extrem lecker. Mein Favorit: Dönerteller mit Pommes scharf. Toller Service und sympathische Mitarbeiter." },
+  { name: "Anonym", text: "Ein absolut fantastischer Dönerladen! Das Essen ist unglaublich lecker, frisch, aromatisch und perfekt zubereitet." },
+  { name: "Toran", text: "Hervorragendes Preis-Leistungs-Verhältnis. Das Brot ist frisch und lecker, ideal zum Umhüllen des saftigen, gut gewürzten Fleisches." }
+];
+
+const track = document.getElementById('review-track');
+const createCard = (r) => `
+  <div class="w-[350px] md:w-[400px] flex-shrink-0 bg-[#222] p-8 border border-white/5 hover:border-kurtl-gold/30 transition-colors">
+    <div class="text-kurtl-gold text-sm mb-4">★★★★★</div>
+    <p class="text-kurtl-cream/80 font-light italic leading-relaxed mb-6">"${r.text}"</p>
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-kurtl-charcoal flex items-center justify-center text-kurtl-gold font-display text-lg">${r.name.charAt(0)}</div>
+      <span class="text-kurtl-cream text-sm font-medium uppercase tracking-wider">${r.name}</span>
+    </div>
+  </div>
+`;
+
+const allReviews = [...reviews, ...reviews];
+track.innerHTML = allReviews.map(createCard).join('');
+</script>
+</body>
+</html>
